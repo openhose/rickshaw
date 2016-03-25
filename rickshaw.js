@@ -459,7 +459,7 @@ Rickshaw.Graph = function(args) {
 			if (!Array.isArray(s.data)) {
 				throw "series data is not an array: " + JSON.stringify(s.data);
 			}
-			
+
 			if (s.data.length > 0) {
 				var x = s.data[0].x;
 				var y = s.data[0].y;
@@ -499,8 +499,8 @@ Rickshaw.Graph = function(args) {
 		// with other Graphs. We need to ensure we copy the scale
 		// so that our mutations do not change the object given to us.
 		// Hence the .copy()
-		this.x = (this.xScale || d3.scale.linear()).copy().domain(domain.x).range([0, this.width]);
-		this.y = (this.yScale || d3.scale.linear()).copy().domain(domain.y).range([this.height, 0]);
+		this.x = (this.xScale || d3.scale.linear()).copy().domain(domain.x).range([7, this.width - 7]);
+		this.y = (this.yScale || d3.scale.linear()).copy().domain(domain.y).range([this.height - 6, 6]);
 
 		this.x.magnitude = d3.scale.linear()
 			.domain([domain.x[0] - domain.x[0], domain.x[1] - domain.x[0]])
@@ -1723,22 +1723,39 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 
 			if (yMin === 0 || self.graph.min === 0) {
 				// when domain starts at 0, do not apply break
+
+        // Replacing all H* within path class domain d property with blank so the ticks on domain don't show
+        var pathDomainTickRemove = selection.select('path').attr("d");
+
+        var newPathDomainNoTick = pathDomainTickRemove.replace(/(H.)/, '');
+        selection.select('path').attr("d", newPathDomainNoTick);
+        selection.select('path').attr("transform", "translate(-4,0)");
+
 				return;
 			}
-			var path = selection.select('path').attr("d");
-			var axisHeight = path.match(/(-?\d+)\s*H\s*-?\d+$/)[1];
+      var path = selection.select('path').attr("d");
+      var axisHeight = path.match(/(-?\d+)\s*H\s*-?\d+$/)[1];
 
 			var lineBreaker = 'V' + (parseInt(axisHeight, 10) - 8) +
-				'm6,-3 l-12,6 m12,-3 l-12,6 m6,-3';
+				'm3,-3 l-6,6 m6,-3 l-6,6 m3,-3';
 
-			var newPath = path.replace(/(V-?\d+\s*H\s*-?\d+)$/, lineBreaker+'$1');
-			selection.select('path').attr("d", newPath);
+      var newPath = path.replace(/(V-?\d+\s*H\s*-?\d+)$/, lineBreaker+'$1');
+      selection.select('path').attr("d", newPath);
+
+      // Replacing all H* within path class domain d property with blank so the ticks on domain don't show
+      var pathDomainTickRemoveSecond = selection.select('path').attr("d");
+
+      var newPathDomainNoTickSecond = pathDomainTickRemoveSecond.replace(/(H.)/, '');
+      selection.select('path').attr("d", newPathDomainNoTickSecond);
+      selection.select('path').attr("transform", "translate(-4,0)");
 		}
 
 		this.vis
 			.append("svg:g")
 			.attr("class", ["y_ticks", this.ticksTreatment].join(" "))
-			.attr("transform", transform)
+//    Overriding transform that is passed through options to always set the NC3 specific one
+//			.attr("transform", transform)
+			.attr("transform", "translate(7, 0)")
 			.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(this.tickSize))
 			.call(breaker)
 			.call(colorAxes);
@@ -1747,11 +1764,12 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 	},
 
 	_drawGrid: function(axis) {
-		var gridSize = (this.orientation == 'right' ? 1 : -1) * this.graph.width;
+		var gridSize = (this.orientation == 'right' ? 1 : -1) * this.graph.width - 14;
 
 		this.graph.vis
 			.append("svg:g")
 			.attr("class", "y_grid")
+			.attr("transform", "translate(7, 0)")
 			.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(gridSize))
 			.selectAll('text')
 			.each(function() { this.parentNode.setAttribute('data-y-value', this.textContent) });
