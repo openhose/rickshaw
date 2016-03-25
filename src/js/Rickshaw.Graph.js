@@ -73,7 +73,7 @@ Rickshaw.Graph = function(args) {
 			if (!Array.isArray(s.data)) {
 				throw "series data is not an array: " + JSON.stringify(s.data);
 			}
-			
+
 			if (s.data.length > 0) {
 				var x = s.data[0].x;
 				var y = s.data[0].y;
@@ -113,8 +113,8 @@ Rickshaw.Graph = function(args) {
 		// with other Graphs. We need to ensure we copy the scale
 		// so that our mutations do not change the object given to us.
 		// Hence the .copy()
-		this.x = (this.xScale || d3.scale.linear()).copy().domain(domain.x).range([0, this.width]);
-		this.y = (this.yScale || d3.scale.linear()).copy().domain(domain.y).range([this.height, 0]);
+		this.x = (this.xScale || d3.scale.linear()).copy().domain(domain.x).range([7, this.width - 7]);
+		this.y = (this.yScale || d3.scale.linear()).copy().domain(domain.y).range([this.height - 6, 6]);
 
 		this.x.magnitude = d3.scale.linear()
 			.domain([domain.x[0] - domain.x[0], domain.x[1] - domain.x[0]])
