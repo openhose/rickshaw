@@ -119,29 +119,29 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 				// when domain starts at 0, do not apply break
 
         // Replacing all H* within path class domain d property with blank so the ticks on domain don't show
-    		var path = selection.select('path').attr("d");
+        var pathDomainTickRemove = selection.select('path').attr("d");
 
-    		var newPath = path.replace(/(H.)/, '');
-    		selection.select('path').attr("d", newPath);
-    		selection.select('path').attr("transform", "translate(-4,0)");
+        var newPathDomainNoTick = pathDomainTickRemove.replace(/(H.)/, '');
+        selection.select('path').attr("d", newPathDomainNoTick);
+        selection.select('path').attr("transform", "translate(-4,0)");
 
 				return;
 			}
-			var path = selection.select('path').attr("d");
-			var axisHeight = path.match(/(-?\d+)\s*H\s*-?\d+$/)[1];
+      var path = selection.select('path').attr("d");
+      var axisHeight = path.match(/(-?\d+)\s*H\s*-?\d+$/)[1];
 
 			var lineBreaker = 'V' + (parseInt(axisHeight, 10) - 8) +
 				'm3,-3 l-6,6 m6,-3 l-6,6 m3,-3';
 
-			var newPath = path.replace(/(V-?\d+\s*H\s*-?\d+)$/, lineBreaker+'$1');
-			selection.select('path').attr("d", newPath);
+      var newPath = path.replace(/(V-?\d+\s*H\s*-?\d+)$/, lineBreaker+'$1');
+      selection.select('path').attr("d", newPath);
 
       // Replacing all H* within path class domain d property with blank so the ticks on domain don't show
-  		var path = selection.select('path').attr("d");
+      var pathDomainTickRemoveSecond = selection.select('path').attr("d");
 
-  		var newPath = path.replace(/(H.)/, '');
-  		selection.select('path').attr("d", newPath);
-  		selection.select('path').attr("transform", "translate(-4,0)");
+      var newPathDomainNoTickSecond = pathDomainTickRemoveSecond.replace(/(H.)/, '');
+      selection.select('path').attr("d", newPathDomainNoTickSecond);
+      selection.select('path').attr("transform", "translate(-4,0)");
 		}
 
 		this.vis
