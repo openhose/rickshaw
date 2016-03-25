@@ -114,7 +114,7 @@ Rickshaw.Graph = function(args) {
 		// so that our mutations do not change the object given to us.
 		// Hence the .copy()
 		this.x = (this.xScale || d3.scale.linear()).copy().domain(domain.x).range([7, this.width - 7]);
-		this.y = (this.yScale || d3.scale.linear()).copy().domain(domain.y).range([this.height - 6, 6]);
+		this.y = (this.yScale || d3.scale.linear()).copy().domain(domain.y).range([this.height - 16, 6]);
 
 		this.x.magnitude = d3.scale.linear()
 			.domain([domain.x[0] - domain.x[0], domain.x[1] - domain.x[0]])
