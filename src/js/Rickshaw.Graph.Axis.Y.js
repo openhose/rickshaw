@@ -117,16 +117,31 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 
 			if (yMin === 0 || self.graph.min === 0) {
 				// when domain starts at 0, do not apply break
+
+        // Replacing all H* within path class domain d property with blank so the ticks on domain don't show
+    		var path = selection.select('path').attr("d");
+
+    		var newPath = path.replace(/(H.)/, '');
+    		selection.select('path').attr("d", newPath);
+    		selection.select('path').attr("transform", "translate(-4,0)");
+
 				return;
 			}
 			var path = selection.select('path').attr("d");
 			var axisHeight = path.match(/(-?\d+)\s*H\s*-?\d+$/)[1];
 
 			var lineBreaker = 'V' + (parseInt(axisHeight, 10) - 8) +
-				'm6,-3 l-12,6 m12,-3 l-12,6 m6,-3';
+				'm3,-3 l-6,6 m6,-3 l-6,6 m3,-3';
 
 			var newPath = path.replace(/(V-?\d+\s*H\s*-?\d+)$/, lineBreaker+'$1');
 			selection.select('path').attr("d", newPath);
+
+      // Replacing all H* within path class domain d property with blank so the ticks on domain don't show
+  		var path = selection.select('path').attr("d");
+
+  		var newPath = path.replace(/(H.)/, '');
+  		selection.select('path').attr("d", newPath);
+  		selection.select('path').attr("transform", "translate(-4,0)");
 		}
 
 		this.vis
@@ -143,11 +158,12 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 	},
 
 	_drawGrid: function(axis) {
-		var gridSize = (this.orientation == 'right' ? 1 : -1) * this.graph.width;
+		var gridSize = (this.orientation == 'right' ? 1 : -1) * this.graph.width - 14;
 
 		this.graph.vis
 			.append("svg:g")
 			.attr("class", "y_grid")
+			.attr("transform", "translate(7, 0)")
 			.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(gridSize))
 			.selectAll('text')
 			.each(function() { this.parentNode.setAttribute('data-y-value', this.textContent) });
