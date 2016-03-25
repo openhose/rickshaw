@@ -132,7 +132,9 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 		this.vis
 			.append("svg:g")
 			.attr("class", ["y_ticks", this.ticksTreatment].join(" "))
-			.attr("transform", transform)
+//    Overriding transform that is passed through options to always set the NC3 specific one
+//			.attr("transform", transform)
+			.attr("transform", "translate(7, 0)")
 			.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(this.tickSize))
 			.call(breaker)
 			.call(colorAxes);
