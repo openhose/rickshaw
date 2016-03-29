@@ -3310,7 +3310,7 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 	defaults: function($super) {
 
 		var defaults = Rickshaw.extend( $super(), {
-			gapSize: 0.05,
+			gapSize: 0.25,
 			unstack: false
 		} );
 
@@ -3376,7 +3376,7 @@ Rickshaw.Graph.Renderer.Bar = Rickshaw.Class.create( Rickshaw.Graph.Renderer, {
 				.attr("x", function(d) { return graph.x(d.x) + barXOffset })
 				.attr("y", function(d) { return (graph.y(d.y0 + Math.abs(d.y))) * (d.y < 0 ? -1 : 1 ) })
 				.attr("width", seriesBarWidth)
-				.attr("height", function(d) { return graph.y.magnitude(Math.abs(d.y)) })
+				.attr("height", function(d) { return graph.height - graph.y(d.y) - 17 })
 				.attr("transform", transform);
 
 			Array.prototype.forEach.call(nodes[0], function(n) {
