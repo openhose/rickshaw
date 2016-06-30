@@ -88,14 +88,16 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 		axis.tickFormat(this.tickFormat);
 		if (this.tickValues) axis.tickValues(this.tickValues);
 
+		var transform, domainOffset = 0;
+
 		if (this.orientation == 'left') {
-			var transform = 'translate(' + (this.width - 7) + ', 0)';
-			var domainOffset = 'translate(4,0)'
+			transform = 'translate(' + (this.width - 7) + ', 0)';
+			domainOffset = 'translate(4,0)';
 		}
 
 		if (this.orientation == 'right') {
-			var transform = 'translate(7,0)';
-			var domainOffset = 'translate(-4,0)'
+			transform = 'translate(7,0)';
+			domainOffset = 'translate(-4,0)';
 		}
 
 		if (this.element) {
@@ -163,28 +165,31 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 	},
 
 	_drawGrid: function(axis) {
-	  if (this.orientation == 'left') {
-	    var gridSize = (this.orientation == 'left' ? 1 : -1) * (this.graph.width - 14);
-	    var offsetSize = 'translate(' + (gridSize + 7) + ', 0)';
+		var gridSize, offsetSize = 0;
 
-	    this.graph.vis
-	      .append("svg:g")
-	      .attr("class", "y_grid")
-	      .attr("transform", offsetSize)
-	      .call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(gridSize))
-	      .selectAll('text')
-	      .each(function() { this.parentNode.setAttribute('data-y-value', this.textContent) });
+		if (this.orientation == 'left') {
+			gridSize = (this.orientation == 'left' ? 1 : -1) * (this.graph.width - 14);
+			offsetSize = 'translate(' + (gridSize + 7) + ', 0)';
+
+			this.graph.vis
+				.append("svg:g")
+				.attr("class", "y_grid")
+				.attr("transform", offsetSize)
+				.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(gridSize))
+				.selectAll('text')
+				.each(function() { this.parentNode.setAttribute('data-y-value', this.textContent) });
 
 				return;
 		}
-	  var gridSize = (this.orientation == 'right' ? 1 : -1) * (this.graph.width - 14);
 
-	  this.graph.vis
-	    .append("svg:g")
-	    .attr("class", "y_grid")
-	    .attr("transform", "translate(7, 0)")
-	    .call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(gridSize))
-	    .selectAll('text')
-	    .each(function() { this.parentNode.setAttribute('data-y-value', this.textContent) });
+		gridSize = (this.orientation == 'right' ? 1 : -1) * (this.graph.width - 14);
+
+		this.graph.vis
+			.append("svg:g")
+			.attr("class", "y_grid")
+			.attr("transform", "translate(7, 0)")
+			.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(gridSize))
+			.selectAll('text')
+			.each(function() { this.parentNode.setAttribute('data-y-value', this.textContent) });
 	}
 	} );
