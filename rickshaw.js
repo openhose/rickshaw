@@ -1694,8 +1694,16 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 		axis.tickFormat(this.tickFormat);
 		if (this.tickValues) axis.tickValues(this.tickValues);
 
+		var transform, domainOffset = 0;
+
 		if (this.orientation == 'left') {
-			var transform = 'translate(' + this.width + ', 0)';
+			transform = 'translate(' + (this.width - 7) + ', 0)';
+			domainOffset = 'translate(4,0)';
+		}
+
+		if (this.orientation == 'right') {
+			transform = 'translate(7,0)';
+			domainOffset = 'translate(-4,0)';
 		}
 
 		if (this.element) {
@@ -1729,10 +1737,11 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 
         var newPathDomainNoTick = pathDomainTickRemove.replace(/(H.)/, '');
         selection.select('path').attr("d", newPathDomainNoTick);
-        selection.select('path').attr("transform", "translate(-4,0)");
+        selection.select('path').attr("transform", domainOffset);
 
 				return;
 			}
+
       var path = selection.select('path').attr("d");
       var axisHeight = path.match(/(-?\d+)\s*H\s*-?\d+$/)[1];
 
@@ -1747,15 +1756,13 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 
       var newPathDomainNoTickSecond = pathDomainTickRemoveSecond.replace(/(H.)/, '');
       selection.select('path').attr("d", newPathDomainNoTickSecond);
-      selection.select('path').attr("transform", "translate(-4,0)");
+      selection.select('path').attr("transform", domainOffset);
 		}
 
 		this.vis
 			.append("svg:g")
 			.attr("class", ["y_ticks", this.ticksTreatment].join(" "))
-//    Overriding transform that is passed through options to always set the NC3 specific one
-//			.attr("transform", transform)
-			.attr("transform", "translate(7, 0)")
+			.attr("transform", transform)
 			.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(this.tickSize))
 			.call(breaker)
 			.call(colorAxes);
@@ -1764,7 +1771,24 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 	},
 
 	_drawGrid: function(axis) {
-		var gridSize = (this.orientation == 'right' ? 1 : -1) * this.graph.width - 14;
+		var gridSize, offsetSize = 0;
+
+		if (this.orientation == 'left') {
+			gridSize = (this.orientation == 'left' ? 1 : -1) * (this.graph.width - 14);
+			offsetSize = 'translate(' + (gridSize + 7) + ', 0)';
+
+			this.graph.vis
+				.append("svg:g")
+				.attr("class", "y_grid")
+				.attr("transform", offsetSize)
+				.call(axis.ticks(this.ticks).tickSubdivide(0).tickSize(gridSize))
+				.selectAll('text')
+				.each(function() { this.parentNode.setAttribute('data-y-value', this.textContent) });
+
+				return;
+		}
+
+		gridSize = (this.orientation == 'right' ? 1 : -1) * (this.graph.width - 14);
 
 		this.graph.vis
 			.append("svg:g")
@@ -1774,7 +1798,7 @@ Rickshaw.Graph.Axis.Y = Rickshaw.Class.create( {
 			.selectAll('text')
 			.each(function() { this.parentNode.setAttribute('data-y-value', this.textContent) });
 	}
-} );
+	} );
 Rickshaw.namespace('Rickshaw.Graph.Axis.Y.Scaled');
 
 Rickshaw.Graph.Axis.Y.Scaled = Rickshaw.Class.create( Rickshaw.Graph.Axis.Y, {
